@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Валентинка для Сашки</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      font-family: Georgia, 'Times New Roman', serif;
+      background:
+        radial-gradient(circle at top, rgba(255, 122, 122, 0.28), transparent 35%),
+        linear-gradient(135deg, #180008, #3b0014 45%, #120005);
+      color: white;
+    }
+
+    .scene {
+      position: relative;
+      width: 100%;
+      max-width: 760px;
+      min-height: 620px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .glow {
+      position: absolute;
+      width: 440px;
+      height: 440px;
+      border-radius: 50%;
+      background: rgba(255, 32, 88, 0.26);
+      filter: blur(60px);
+      animation: pulseGlow 3s ease-in-out infinite;
+    }
+
+    .card-wrap {
+      position: relative;
+      width: 340px;
+      height: 340px;
+      cursor: pointer;
+      perspective: 1200px;
+      animation: float 4s ease-in-out infinite;
+      z-index: 2;
+    }
+
+    .hint {
+      position: absolute;
+      bottom: 56px;
+      width: 100%;
+      text-align: center;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.72);
+      z-index: 3;
+    }
+
+    .heart {
+      position: absolute;
+      inset: 0;
+      transform-style: preserve-3d;
+      transition: transform 1s cubic-bezier(.2,.8,.2,1);
+    }
+
+    .card-wrap:hover .heart,
+    .card-wrap.open .heart {
+      transform: rotateY(180deg) scale(1.02);
+    }
+
+    .face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .heart-shape {
+      position: relative;
+      width: 230px;
+      height: 230px;
+      background: linear-gradient(145deg, #ff174d, #b8002e);
+      transform: rotate(-45deg);
+      box-shadow:
+        0 28px 70px rgba(255, 0, 64, 0.45),
+        inset -12px -12px 24px rgba(90, 0, 20, 0.35),
+        inset 12px 12px 24px rgba(255, 150, 165, 0.28);
+    }
+
+    .heart-shape::before,
+    .heart-shape::after {
+      content: '';
+      position: absolute;
+      width: 230px;
+      height: 230px;
+      border-radius: 50%;
+      background: inherit;
+    }
+
+    .heart-shape::before {
+      top: -115px;
+      left: 0;
+    }
+
+    .heart-shape::after {
+      left: 115px;
+      top: 0;
+    }
+
+    .front .shine {
+      position: absolute;
+      width: 82px;
+      height: 26px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.42);
+      filter: blur(6px);
+      transform: translate(-58px, -72px) rotate(-28deg);
+      z-index: 3;
+    }
+
+    .back {
+      transform: rotateY(180deg);
+    }
+
+    .message-box {
+      position: relative;
+      width: 285px;
+      min-height: 210px;
+      padding: 34px 26px;
+      border-radius: 32px;
+      background: rgba(255, 245, 247, 0.96);
+      color: #980025;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      box-shadow: 0 28px 80px rgba(0,0,0,.35);
+      border: 1px solid rgba(255,255,255,.8);
+    }
+
+    .message-box::before {
+      content: '♥';
+      position: absolute;
+      top: 14px;
+      left: 22px;
+      font-size: 20px;
+      color: #ff2a5f;
+    }
+
+    .message-box::after {
+      content: '♥';
+      position: absolute;
+      bottom: 14px;
+      right: 22px;
+      font-size: 20px;
+      color: #ff2a5f;
+    }
+
+    .message {
+      font-size: 38px;
+      line-height: 1.15;
+      font-weight: 700;
+      text-wrap: balance;
+    }
+
+    .floating-heart {
+      position: absolute;
+      color: rgba(255, 152, 174, 0.8);
+      font-size: 22px;
+      animation: rise 7s linear infinite;
+    }
+
+    .floating-heart:nth-child(1) { left: 10%; bottom: -30px; animation-delay: 0s; }
+    .floating-heart:nth-child(2) { left: 25%; bottom: -40px; animation-delay: 1.4s; font-size: 16px; }
+    .floating-heart:nth-child(3) { left: 70%; bottom: -35px; animation-delay: 2.2s; font-size: 28px; }
+    .floating-heart:nth-child(4) { left: 86%; bottom: -45px; animation-delay: 3.5s; font-size: 18px; }
+    .floating-heart:nth-child(5) { left: 52%; bottom: -50px; animation-delay: 4.6s; font-size: 14px; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-16px); }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { transform: scale(1); opacity: .75; }
+      50% { transform: scale(1.12); opacity: 1; }
+    }
+
+    @keyframes rise {
+      0% { transform: translateY(0) scale(.8) rotate(0deg); opacity: 0; }
+      12% { opacity: 1; }
+      100% { transform: translateY(-760px) scale(1.35) rotate(24deg); opacity: 0; }
+    }
+
+    @media (max-width: 480px) {
+      .scene { min-height: 100vh; }
+      .card-wrap { width: 300px; height: 300px; }
+      .heart-shape,
+      .heart-shape::before,
+      .heart-shape::after {
+        width: 200px;
+        height: 200px;
+      }
+      .heart-shape::before { top: -100px; }
+      .heart-shape::after { left: 100px; }
+      .message-box { width: 260px; }
+      .message { font-size: 32px; }
+      .hint { bottom: 36px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="floating-heart">♥</div>
+  <div class="floating-heart">♥</div>
+  <div class="floating-heart">♥</div>
+  <div class="floating-heart">♥</div>
+  <div class="floating-heart">♥</div>
+
+  <main class="scene">
+    <div class="glow"></div>
+
+    <section class="card-wrap" id="card" aria-label="Відкрити валентинку">
+      <div class="heart">
+        <div class="face front">
+          <div class="heart-shape"></div>
+          <div class="shine"></div>
+        </div>
+
+        <div class="face back">
+          <div class="message-box">
+            <div class="message">Люблю тебе, Сашка</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="hint">натисни на сердечко</div>
+  </main>
+
+  <script>
+    const card = document.getElementById('card');
+
+    card.addEventListener('click', () => {
+      card.classList.toggle('open');
+    });
+  </script>
+</body>
+</html>
